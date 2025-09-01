@@ -1,7 +1,22 @@
+"use client";
+
 import Link from "next/link";
+import Image from "next/image";
 import "../styles/schools.css";
 
 export default function SchoolsGrid({ schools }) {
+  const handleViewDetails = (school) => {
+    const details = `
+    Name: ${school.name}
+    Email: ${school.email_id}
+    Contact: ${school.contact}
+    Address: ${school.address}
+    City: ${school.city}
+    State: ${school.state}
+    `;
+    alert(details);
+  };
+
   return (
     <div className="schools-container">
       <div className="header-section">
@@ -13,8 +28,10 @@ export default function SchoolsGrid({ schools }) {
       <div className="schools-grid">
         {schools.map((school) => (
           <div className="school-card" key={school.id}>
-            <img
-              src={school.image}
+            <Image
+              src={`/schoolImages/${school.image}`}
+              height={300}
+              width={500}
               alt={school.name}
               className="school-image"
             />
@@ -29,7 +46,12 @@ export default function SchoolsGrid({ schools }) {
                 </p>
               </div>
               <div>
-                <button className="view-btn">View Details</button>
+                <button
+                  className="view-btn"
+                  onClick={() => handleViewDetails(school)}
+                >
+                  View Details
+                </button>
               </div>
             </div>
           </div>

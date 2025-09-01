@@ -57,22 +57,11 @@ select:focus {
   outline: none;
 }
 
-input[type="file"] {
-  width: 100%;
-  font-size: 15px;
-  color: #555;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-  box-sizing: border-box;
-  cursor: pointer;
-}
-
 input[type="file"]::file-selector-button {
   border: none;
+  border-right: 1px solid #ccc;
   padding: 0px 14px;
   margin-right: 10px;
-  border-radius: 6px;
   background-color: #fff;
   color: #333;
   font-size: 14px;

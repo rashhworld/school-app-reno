@@ -11,3 +11,9 @@
 a {
   text-decoration: none;
 }
+
+span.error {
+  font-size: 14px;
+  padding-top: 5px;
+  color: red;
+}

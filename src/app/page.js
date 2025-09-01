@@ -3,7 +3,7 @@ import SchoolsGrid from "@/components/showSchools";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 async function getSchools() {
-  const res = await fetch(`${baseUrl}/api/schools`);
+  const res = await fetch(`${baseUrl}/api/fetch`);
   return res.json();
 }
 
