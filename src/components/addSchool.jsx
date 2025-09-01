@@ -30,11 +30,13 @@ export default function SchoolRegistrationForm() {
       body: formData,
     });
 
+    const resData = await res.json();
+
     if (res.ok) {
       alert("School registered successfully!");
       reset();
     } else {
-      alert("Failed to register school.");
+      alert(resData.error || "Failed to register school.");
     }
   };
 
@@ -57,7 +59,20 @@ export default function SchoolRegistrationForm() {
           <label>Upload School Image</label>
           <input
             type="file"
-            {...register("image", { required: "School image is required" })}
+            accept="image/*"
+            {...register("image", {
+              required: "School image is required",
+              validate: {
+                isImage: (files) =>
+                  files && files[0] && files[0].type.startsWith("image/")
+                    ? true
+                    : "Only image files are allowed",
+                fileSize: (files) =>
+                  files && files[0] && files[0].size <= 3 * 1024 * 1024
+                    ? true
+                    : "Image size must be less than 3MB",
+              },
+            })}
           />
           {errors.image && (
             <span className="error">{errors.image.message}</span>
@@ -90,8 +105,8 @@ export default function SchoolRegistrationForm() {
             {...register("contact", {
               required: "Contact number is required",
               pattern: {
-                value: /^[0-9]{10}$/,
-                message: "Contact number must be exactly 10 digits",
+                value: /^[1-9][0-9]{9}$/,
+                message: "Enter valid 10-digit number",
               },
             })}
           />

@@ -25,38 +25,47 @@ export default function SchoolsGrid({ schools }) {
           Add School →
         </Link>
       </div>
-      <div className="schools-grid">
-        {schools.map((school) => (
-          <div className="school-card" key={school.id}>
-            <Image
-              src={`/schoolImages/${school.image}`}
-              height={300}
-              width={500}
-              alt={school.name}
-              className="school-image"
-            />
-            <div className="school-content">
-              <div>
-                <h2>{school.name}</h2>
-                <p>
-                  <strong>Address:</strong> {school.address}
-                </p>
-                <p>
-                  <strong>City:</strong> {school.city}
-                </p>
-              </div>
-              <div>
-                <button
-                  className="view-btn"
-                  onClick={() => handleViewDetails(school)}
-                >
-                  View Details
-                </button>
+
+      {schools.length === 0 ? (
+        <div className="no-schools">
+          <p>
+            No schools have been registered yet. <br /> Be the first to add one!
+          </p>
+        </div>
+      ) : (
+        <div className="schools-grid">
+          {schools.map((school) => (
+            <div className="school-card" key={school.id}>
+              <Image
+                src={`/schoolImages/${school.image}`}
+                height={300}
+                width={500}
+                alt={school.name}
+                className="school-image"
+              />
+              <div className="school-content">
+                <div>
+                  <h2>{school.name}</h2>
+                  <p>
+                    <strong>Address:</strong> {school.address}
+                  </p>
+                  <p>
+                    <strong>City:</strong> {school.city}
+                  </p>
+                </div>
+                <div>
+                  <button
+                    className="view-btn"
+                    onClick={() => handleViewDetails(school)}
+                  >
+                    View Details
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
