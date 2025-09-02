@@ -29,7 +29,7 @@ A modern Next.js application for managing school registrations with image upload
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/rashhworld/nextjs-school-app.git
+   git clone https://github.com/rashhworld/school-app-reno.git
    cd nextjs-school-app
    ```
 

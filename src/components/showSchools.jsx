@@ -37,7 +37,7 @@ export default function SchoolsGrid({ schools }) {
           {schools.map((school) => (
             <div className="school-card" key={school.id}>
               <Image
-                src={`/schoolImages/${school.image}`}
+                src={school.imageUrl}
                 height={300}
                 width={500}
                 alt={school.name}
