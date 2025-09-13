@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { NextResponse } from "next/server";
 
 export async function GET(req) {
   try {
@@ -7,7 +8,10 @@ export async function GET(req) {
     const filename = searchParams.get("filename");
 
     if (!filename) {
-      return new Response("Filename is required", { status: 400 });
+      return NextResponse.json(
+        { error: "Filename is required" },
+        { status: 400 }
+      );
     }
 
     // Build absolute path to the image
@@ -20,7 +24,7 @@ export async function GET(req) {
 
     // Check if file exists
     if (!fs.existsSync(filePath)) {
-      return new Response("Image not found", { status: 404 });
+      return NextResponse.json({ error: "Image not found" }, { status: 404 });
     }
 
     // Read file content
@@ -33,7 +37,7 @@ export async function GET(req) {
     if (ext === ".webp") contentType = "image/webp";
     if (ext === ".gif") contentType = "image/gif";
 
-    return new Response(fileBuffer, {
+    return new NextResponse(fileBuffer, {
       status: 200,
       headers: {
         "Content-Type": contentType,
@@ -42,6 +46,9 @@ export async function GET(req) {
     });
   } catch (err) {
     console.error("Error fetching image:", err);
-    return new Response("Failed to fetch image", { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch image" },
+      { status: 500 }
+    );
   }
 }

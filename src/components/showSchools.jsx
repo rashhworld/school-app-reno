@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import "../styles/schools.css";
 
-export default function SchoolsGrid({ schools }) {
+export default function SchoolsGrid({ schools, user }) {
+  const router = useRouter();
+
   const handleViewDetails = (school) => {
     const details = `
     Name: ${school.name}
@@ -17,13 +20,20 @@ export default function SchoolsGrid({ schools }) {
     alert(details);
   };
 
+  const handleEditSchool = (school) => {
+    // Navigate to add page with school ID for editing
+    router.push(`/add?id=${school.id}`);
+  };
+
   return (
     <div className="schools-container">
       <div className="header-section">
         <h1 className="page-title">Registered Schools</h1>
-        <Link className="add-btn" href="/add">
-          Add School →
-        </Link>
+        {user && (
+          <Link className="add-btn" href="/add">
+            Add School →
+          </Link>
+        )}
       </div>
 
       {schools.length === 0 ? (
@@ -60,6 +70,14 @@ export default function SchoolsGrid({ schools }) {
                   >
                     View Details
                   </button>
+                  {user && (
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleEditSchool(school)}
+                    >
+                      Edit School
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

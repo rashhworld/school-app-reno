@@ -1,16 +1,31 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "../styles/form.css";
 
-export default function SchoolRegistrationForm() {
+export default function SchoolRegistrationForm({ schoolData }) {
+  const router = useRouter();
+  const isEditing = !!schoolData;
+
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
     reset,
-  } = useForm();
+  } = useForm({
+    defaultValues: schoolData
+      ? {
+          name: schoolData.name,
+          email_id: schoolData.email_id,
+          contact: schoolData.contact,
+          city: schoolData.city,
+          state: schoolData.state,
+          address: schoolData.address,
+        }
+      : {},
+  });
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -25,6 +40,11 @@ export default function SchoolRegistrationForm() {
       formData.append("image", data.image[0]);
     }
 
+    // Add school ID if editing
+    if (isEditing) {
+      formData.append("id", schoolData.id);
+    }
+
     const res = await fetch("/api/add", {
       method: "POST",
       body: formData,
@@ -33,17 +53,26 @@ export default function SchoolRegistrationForm() {
     const resData = await res.json();
 
     if (res.ok) {
-      alert("School registered successfully!");
-      reset();
+      alert(
+        isEditing
+          ? "School updated successfully!"
+          : "School registered successfully!"
+      );
+      router.push("/");
     } else {
-      alert(resData.error || "Failed to register school.");
+      alert(
+        resData.error ||
+          `Failed to ${isEditing ? "update" : "register"} school.`
+      );
     }
   };
 
   return (
     <div className="container">
       <Link href="/">← View listed schools</Link>
-      <h1 className="form-title">School Registration</h1>
+      <h1 className="form-title">
+        {isEditing ? "Edit School" : "School Registration"}
+      </h1>
       <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
         <div className="form-group">
           <label>Enter Your School Name</label>
@@ -56,21 +85,28 @@ export default function SchoolRegistrationForm() {
         </div>
 
         <div className="form-group">
-          <label>Upload School Image</label>
+          <label>
+            School Image {isEditing && schoolData.image && "(uploaded)"}
+          </label>
           <input
             type="file"
             accept="image/*"
             {...register("image", {
-              required: "School image is required",
+              required: isEditing ? false : "School image is required",
               validate: {
-                isImage: (files) =>
-                  files && files[0] && files[0].type.startsWith("image/")
+                isImage: (files) => {
+                  if (!files || !files[0])
+                    return isEditing ? true : "School image is required";
+                  return files[0].type.startsWith("image/")
                     ? true
-                    : "Only image files are allowed",
-                fileSize: (files) =>
-                  files && files[0] && files[0].size <= 3 * 1024 * 1024
+                    : "Only image files are allowed";
+                },
+                fileSize: (files) => {
+                  if (!files || !files[0]) return true;
+                  return files[0].size <= 3 * 1024 * 1024
                     ? true
-                    : "Image size must be less than 3MB",
+                    : "Image size must be less than 3MB";
+                },
               },
             })}
           />
@@ -149,7 +185,13 @@ export default function SchoolRegistrationForm() {
         </div>
 
         <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Register Your School"}
+          {isSubmitting
+            ? isEditing
+              ? "Updating..."
+              : "Submitting..."
+            : isEditing
+            ? "Update School"
+            : "Register Your School"}
         </button>
       </form>
     </div>

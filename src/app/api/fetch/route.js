@@ -1,4 +1,5 @@
 import { getDb } from "@/lib/db";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -11,15 +12,12 @@ export async function GET() {
       imageUrl: `/api/images?filename=${encodeURIComponent(school.image)}`,
     }));
 
-    return new Response(JSON.stringify(updatedRows), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(updatedRows, { status: 200 });
   } catch (err) {
     console.error("Error fetching schools:", err);
-    return new Response(JSON.stringify({ error: "Failed to fetch schools" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(
+      { error: "Failed to fetch schools" },
+      { status: 500 }
+    );
   }
 }
